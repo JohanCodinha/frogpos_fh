@@ -1,4 +1,6 @@
-import {drawView} from './views/myview.js';
+import {loginFormView} from './views/login_form.view.js';
+import {loginFormModel} from './models/login_form.model.js';
+
 
 var Router = Backbone.Router.extend({
 	routes: {
@@ -12,7 +14,8 @@ var Router = Backbone.Router.extend({
 	},
 	login: function(){
 		console.log('login');
-		drawView();
+		var loginForm = new loginFormView({ model: loginFormModel });
+		console.log('++');
 	},
 	about: function(){
 	}
@@ -20,4 +23,3 @@ var Router = Backbone.Router.extend({
 
 var router = new Router();
 Backbone.history.start();
-

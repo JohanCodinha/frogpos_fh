@@ -46,7 +46,9 @@
 
 	/* WEBPACK VAR INJECTION */(function(Backbone) {'use strict';
 
-	var _myview = __webpack_require__(4);
+	var _login_formView = __webpack_require__(4);
+
+	var _login_formModel = __webpack_require__(5);
 
 	var Router = Backbone.Router.extend({
 		routes: {
@@ -60,14 +62,25 @@
 		},
 		login: function login() {
 			console.log('login');
+			var loginForm = new _login_formView.loginFormView({ model: _login_formModel.loginFormModel });
+			console.log('++');
 		},
-		about: function about() {
-			(0, _myview.drawView)();
-		}
+		about: function about() {}
 	});
 
 	var router = new Router();
 	Backbone.history.start();
+
+	// $( "#loginForm" ).submit(function( event ) {
+	//   event.preventDefault();
+	//   var data = $("#mail").val();
+	//   console.log(data);
+	//   console.log($( "form" ).serialize());
+	//   $.post('http://localhost:3000/authenticate', $( "form" ).serialize())
+	//   .done(function(data) {
+	//     console.log(data);
+	//   });
+	// });
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
@@ -13596,15 +13609,53 @@
 
 /***/ },
 /* 4 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	/* WEBPACK VAR INJECTION */(function(Backbone, _, $) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
-	exports.drawView = drawView;
-	function drawView() {};
+	var loginFormView = Backbone.View.extend({
+
+		tagName: 'body',
+
+		template: _.template($('#login-form-template').html()),
+
+		initialize: function initialize() {
+			console.log('form view initialize...');
+			this.render();
+		},
+
+		render: function render() {
+			this.$el.html(this.template(this.model.attributes));
+			return this;
+		}
+
+	});
+
+	exports.loginFormView = loginFormView;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(2), __webpack_require__(3)))
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(Backbone) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var loginFormModel = Backbone.Model.extend({
+		defaults: {
+			mail: '',
+			password: ''
+		}
+
+	});
+
+	exports.loginFormModel = loginFormModel;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }
 /******/ ]);

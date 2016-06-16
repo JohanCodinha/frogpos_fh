@@ -10,11 +10,20 @@
 		</header>
 	<nav>
 		<ul>
-			<li><a href="#signin">Sign in</a></li>
-			<li><a href="#login">Log in</a></li>
+			<li><a href="#signin">Sign In</a></li>
+			<li><a href="#login">Log In</a></li>
 			<li><a href="#about">About</a></li>
 		</ul>
 	</nav>
+	<script type="text/template" id="login-form-template">
+		<form id="login-form" action="#" method="post">
+			<label for="mail">mail :</label>
+			<input id="mail" type="text">
+			<label for="password">password :</label>
+			<input id="password" type="password">
+			<button type="submit">Login</button>
+		</form>
+	</script>
 	<script src="build/bundle.js"></script>
 </body>
 </html>
