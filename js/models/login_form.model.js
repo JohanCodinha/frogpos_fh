@@ -1,8 +1,9 @@
-var loginFormModel = Backbone.Model.extend({
+var userModel = Backbone.Model.extend({
 	defaults: {
 		mail: '',
-		password : '',
-		token : '',
+		name: '',
+		business: '',
+		token : ''
 	}
 });
-export {loginFormModel};
+export {userModel};

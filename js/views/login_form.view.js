@@ -1,10 +1,11 @@
-import {template as loginTemplate} from '../templates/login.template.html.js';
+import {formTemplate, loggedInTemplate} from '../templates/login.template.html.js';
 
 var loginFormView = Backbone.View.extend({
 
 	el: '#app',
 
-	template: _.template( loginTemplate ),
+	formTemplate: _.template( formTemplate ),
+	loggedInTemplate: _.template( loggedInTemplate ),
 
 	events : {
 		"click #submit" : "submit"
@@ -15,10 +16,15 @@ var loginFormView = Backbone.View.extend({
 		this.render();
 		console.log(JSON.stringify(this.model));
 		_.bindAll(this, 'submit');
-		},
+		this.listenTo(this.model, 'change', this.render);
+	},
 
 	render: function() {
-    this.$el.html(this.template(this.model.attributes));
+		console.log('view render trigered');
+		if (this.model.get('token') !== ''){
+			this.$el.html(this.loggedInTemplate(this.model.attributes));
+		} else {
+			this.$el.html(this.formTemplate(this.model.attributes));		}
     return this;
   },
 
@@ -37,10 +43,16 @@ var loginFormView = Backbone.View.extend({
 	  );
 
     // Post request to login, retreive a token back.
-    $.post('http://localhost:3000/authenticate', formData ).done( function(data)
+    $.post( 'http://localhost:3000/authenticate', formData ).done( function(data)
     {
+    	console.log(data);
     	// store the token into the form model
-			tmpThis.model.set('token', data.token);
+			tmpThis.model.set({
+				name: data.name,
+				mail: data.mail,
+				business: data.business,
+				token: data.token
+			});
   	});
   }
 });
