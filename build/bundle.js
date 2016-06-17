@@ -48,39 +48,34 @@
 
 	var _login_formView = __webpack_require__(4);
 
-	var _login_formModel = __webpack_require__(5);
+	var _login_formModel = __webpack_require__(6);
+
+	var loginForm = new _login_formView.loginFormView({ model: new _login_formModel.loginFormModel() });
 
 	var Router = Backbone.Router.extend({
 		routes: {
-			'signin': 'newUser',
+			'signin': 'signin',
 			'login': 'login',
 			'about': 'about'
 		},
 
-		newUser: function newUser() {
+		signin: function signin() {
 			console.log("newUser");
+			loginForm.$el.hide();
 		},
+
 		login: function login() {
 			console.log('login');
-			var loginForm = new _login_formView.loginFormView({ model: _login_formModel.loginFormModel });
-			console.log('++');
+			loginForm.$el.show();
 		},
-		about: function about() {}
+
+		about: function about() {
+			console.log(loginForm.model.get('token'));
+		}
 	});
 
 	var router = new Router();
 	Backbone.history.start();
-
-	// $( "#loginForm" ).submit(function( event ) {
-	//   event.preventDefault();
-	//   var data = $("#mail").val();
-	//   console.log(data);
-	//   console.log($( "form" ).serialize());
-	//   $.post('http://localhost:3000/authenticate', $( "form" ).serialize())
-	//   .done(function(data) {
-	//     console.log(data);
-	//   });
-	// });
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
@@ -13616,22 +13611,51 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	exports.loginFormView = undefined;
+
+	var _loginTemplateHtml = __webpack_require__(5);
+
 	var loginFormView = Backbone.View.extend({
 
-		tagName: 'body',
+		el: '#app',
 
-		template: _.template($('#login-form-template').html()),
+		template: _.template(_loginTemplateHtml.template),
+
+		events: {
+			"click #submit": "submit"
+		},
 
 		initialize: function initialize() {
-			console.log('form view initialize...');
+			console.log('form view initialized...');
 			this.render();
+			console.log(JSON.stringify(this.model));
+			_.bindAll(this, 'submit');
 		},
 
 		render: function render() {
 			this.$el.html(this.template(this.model.attributes));
 			return this;
-		}
+		},
 
+		submit: function submit(e) {
+			e.preventDefault();
+			var tmpThis = this;
+			console.log(tmpThis);
+			var formData = {};
+
+			// check every input field and asign value to formData object
+			$('#login-form').children('input').each(function (i, el) {
+				if ($(el).val() !== '') {
+					formData[el.id] = $(el).val();
+				}
+			});
+
+			// Post request to login, retreive a token back.
+			$.post('http://localhost:3000/authenticate', formData).done(function (data) {
+				// store the token into the form model
+				tmpThis.model.set('token', data.token);
+			});
+		}
 	});
 
 	exports.loginFormView = loginFormView;
@@ -13639,6 +13663,19 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var template = "<h1>Login :</h1>\n<form id=\"login-form\" action=\"#\" method=\"post\">\n\t<label for=\"mail\">mail :</label>\n\t<input id=\"mail\" type=\"text\">\n\t<label for=\"password\">password :</label>\n\t<input id=\"password\" type=\"password\">\n\t<button id=\"submit\" type=\"submit\">Login</button>\n</form>";
+
+	exports.template = template;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Backbone) {'use strict';
@@ -13649,11 +13686,10 @@
 	var loginFormModel = Backbone.Model.extend({
 		defaults: {
 			mail: '',
-			password: ''
+			password: '',
+			token: ''
 		}
-
 	});
-
 	exports.loginFormModel = loginFormModel;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 

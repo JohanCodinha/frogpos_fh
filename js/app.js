@@ -1,23 +1,27 @@
 import {loginFormView} from './views/login_form.view.js';
 import {loginFormModel} from './models/login_form.model.js';
 
+var loginForm = new loginFormView({ model: new loginFormModel });
 
 var Router = Backbone.Router.extend({
 	routes: {
-		'signin': 'newUser',
+		'signin': 'signin',
 		'login': 'login',
 		'about': 'about'
 	},
 
-	newUser: function(){
+	signin: function(){
 		console.log("newUser");
+		loginForm.$el.hide();
 	},
+
 	login: function(){
 		console.log('login');
-		var loginForm = new loginFormView({ model: loginFormModel });
-		console.log('++');
+		loginForm.$el.show();
 	},
+
 	about: function(){
+		console.log(loginForm.model.get('token'));
 	}
 });
 
